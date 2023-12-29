@@ -58,10 +58,10 @@ jobs:
           ref: tf2
           path: hl2sdk-tf2
 
-      - name: Setting up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+      # - name: Setting up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: '3.10'
 
       # - name: Install Python dependencies
       #   run: |
