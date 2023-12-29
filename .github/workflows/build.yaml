@@ -90,6 +90,14 @@ jobs:
           path: Template
           submodules: recursive
 
+      - name: Preparing build
+        working-directory: Template
+        run: |
+          # We need to copy these files: smsdk_ext.cpp smsdk_ext.h from sourcemod/public
+          # And move them into our working directory /sdk folder
+          cp ../sourcemod/public/smsdk_ext.cpp sdk/
+          cp ../sourcemod/public/smsdk_ext.h sdk/
+
       - name: Compiling
         working-directory: Template
         run: |

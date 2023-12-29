@@ -27,7 +27,7 @@ PROJECT = Template
 USEMETA = true
 
 # smsdk_ext.cpp gets added automatically
-OBJECTS = smsdk_ext.cpp extension.cpp
+OBJECTS = sdk/smsdk_ext.cpp extension.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
