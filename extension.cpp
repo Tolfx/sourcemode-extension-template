@@ -1,3 +1,5 @@
+#define mallocsize(_p) (malloc_usable_size(_p))
+
 #include "extension.h"
 
 /**
