@@ -98,6 +98,11 @@ jobs:
           cp ../sourcemod/public/smsdk_ext.cpp sdk/
           cp ../sourcemod/public/smsdk_ext.h sdk/
 
+          # Echo the ls
+          ls -la sdk/
+          ls -la ../
+          ls -la ./
+
       - name: Compiling
         working-directory: Template
         run: |
