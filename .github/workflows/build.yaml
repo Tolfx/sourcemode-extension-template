@@ -1,0 +1,128 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os_short }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+
+        include:
+          - os: ubuntu-20.04
+            os_short: linux
+
+    steps:
+      - name: Prepare env
+        shell: bash
+        run: |
+          echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Install (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y clang g++-multilib
+          # Install make
+          sudo apt-get install -y make
+          # Install cmake
+          sudo apt-get install -y cmake
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+
+      - name: Checking out MM:Source
+        uses: actions/checkout@v3
+        with:
+          repository: alliedmodders/metamod-source
+          ref: 1.11-dev
+          path: metamod-source
+          submodules: recursive
+
+      - name: Checking out SourceMod
+        uses: actions/checkout@v3
+        with:
+          repository: alliedmodders/sourcemod
+          ref: 1.11-dev
+          path: sourcemod
+          submodules: recursive
+
+      - name: Checking out hl2sdk-tf2
+        uses: actions/checkout@v3
+        with:
+          repository: alliedmodders/hl2sdk
+          ref: tf2
+          path: hl2sdk-tf2
+
+      - name: Setting up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # - name: Install Python dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip setuptools wheel
+      #     pip install git+https://github.com/alliedmodders/ambuild
+
+      # - name: Build MM:Source
+      #   run: |
+      #     # First configure in build
+      #     # Check if amtl is in metamod-source/third-party
+      #     mkdir build
+      #     cd build
+      #     python ../metamod-source/configure.py
+      #     # Then build
+      #     ambuild
+
+      #     cd ..
+
+      #     # Move build to metamod-source
+      #     mkdir metamod-source/build
+      #     mv build/* metamod-source/build
+
+      - name: Checking out own repository
+        uses: actions/checkout@v3
+        with:
+          path: Template
+          submodules: recursive
+
+      - name: Compiling
+        working-directory: Template
+        run: |
+          # We have a Makefile in the root directory so we only use make not cmake
+          make -j$(nproc) -f Makefile ENGINE=tf2
+
+      - name: Uploading package
+        uses: actions/upload-artifact@v3
+        with:
+          name: Template-${{ matrix.os_short }}-${{ env.GITHUB_SHA_SHORT }}
+          path: Template
+
+  release:
+    name: Release
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Arhive Assets
+        shell: bash
+        run: find * -maxdepth 0 -type d -exec zip -r {}.zip {} \;
+
+      - name: Create Release
+        shell: bash
+        run: gh release create ${{ github.ref_name }} --title ${{ github.ref_name }} --latest -R ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload assets
+        shell: bash
+        run: gh release upload ${{ github.ref_name }} *.zip -R ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
