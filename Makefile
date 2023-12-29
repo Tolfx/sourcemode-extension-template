@@ -151,13 +151,13 @@ ifeq "$(USEMETA)" "true"
 		-I$(METAMOD)/sourcehook 
 	CFLAGS += -DSE_EPISODEONE=1 -DSE_DARKMESSIAH=2 -DSE_ORANGEBOX=3 -DSE_BLOODYGOODTIME=4 -DSE_EYE=5 \
 		-DSE_CSS=6 -DSE_HL2DM=7 -DSE_DODS=8 -DSE_TF2=9 -DSE_LEFT4DEAD=10 -DSE_NUCLEARDAWN=11 \
-		-DSE_LEFT4DEAD2=12 -DSE_ALIENSWARM=13 -DSE_PORTAL2=14 -DSE_CSGO=15 -DSE_DOTA=16 -D_LINUX -fpermissive
+		-DSE_LEFT4DEAD2=12 -DSE_ALIENSWARM=13 -DSE_PORTAL2=14 -DSE_CSGO=15 -DSE_DOTA=16 -D_LINUX -fpermissive 
 endif
 
 LINK += -m32 -lm -ldl -lstdc++
 
 CFLAGS += -DPOSIX -Dstricmp=strcasecmp -D_stricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp \
-	-D_snprintf=snprintf -D_vsnprintf=vsnprintf -D_alloca=alloca -Dstrcmpi=strcasecmp -DCOMPILER_GCC -Wall -Wno-class-memaccess \
+	-D_snprintf=snprintf -D_vsnprintf=vsnprintf -D_alloca=alloca -Dstrcmpi=strcasecmp -DCOMPILER_GCC -Wall -Wno-class-memaccess -Wdelete-non-virtual-dtor \
 	-Wno-overloaded-virtual -Wno-switch -Wno-unused -msse -DSOURCEMOD_BUILD -DHAVE_STDINT_H -m32 -std=c++14
 CPPFLAGS += -Wno-non-virtual-dtor -fno-exceptions -fno-rtti -lstdc++
 
@@ -186,7 +186,7 @@ ifeq "$(OS)" "Darwin"
 	LINK += -dynamiclib -lstdc++ -mmacosx-version-min=10.5
 else
 	LIB_EXT = so
-	CFLAGS += -D_LINUX
+	CFLAGS += -D_GNUC -D_LINUX 
 	LINK += -shared
 endif
 
