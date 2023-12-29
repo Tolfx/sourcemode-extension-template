@@ -1,5 +1,3 @@
-#define mallocsize(_p) (malloc_usable_size(_p))
-
 #include "extension.h"
 
 /**
@@ -22,4 +20,4 @@ void CExtension::SDK_OnUnload()
 
 /* Linking extension */
 CExtension g_Extension;
-SMNEXT_LINK(&g_Extension);
+SMEXT_LINK(&g_Extension);

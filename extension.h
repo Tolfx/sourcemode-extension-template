@@ -30,6 +30,8 @@
 #ifndef _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_
 #define _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_
 
+#define mallocsize(_p) (malloc_usable_size(_p))
+
 /**
  * @file extension.h
  * @brief Sample extension code header.
@@ -48,22 +50,22 @@
 class CExtension : public SDKExtension, public IConCommandBaseAccessor, public IClientListener
 {
 public:
-	static void CheckClientUpload(int client);
+	// static void CheckClientUpload(int client);
 
-	virtual void OnClientPutInServer(int client) { return CheckClientUpload(client); }
+	// virtual void OnClientPutInServer(int client) { return CheckClientUpload(client); }
 	// virtual void OnClientSettingsChanged(int client) { return CheckClientUpload(client); }
 
-	virtual void OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t *pPlayerEntity, EQueryCvarValueStatus eStatus, const char *pCvarName, const char *pCvarValue);
+	// virtual void OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t *pPlayerEntity, EQueryCvarValueStatus eStatus, const char *pCvarName, const char *pCvarValue);
 
-	virtual bool RegisterConCommandBase(ConCommandBase *pVar)
-	{
-		return META_REGCVAR(pVar);
-	}
+	// virtual bool RegisterConCommandBase(ConCommandBase *pVar)
+	// {
+	// 	return META_REGCVAR(pVar);
+	// }
 
-	virtual void OnGameFrame(bool simulating);
-	virtual unsigned int OnSize(const char *pFileName, const char *pPathID);
+	// virtual void OnGameFrame(bool simulating);
+	// virtual unsigned int OnSize(const char *pFileName, const char *pPathID);
 
-	virtual void OnCoreMapStart(edict_t *pEdictList, int edictCount, int clientMax);
+	// virtual void OnCoreMapStart(edict_t *pEdictList, int edictCount, int clientMax);
 	/**
 	 * @brief This is called after the initial loading sequence has been processed.
 	 *
@@ -72,7 +74,7 @@ public:
 	 * @param late		Whether or not the module was loaded after map load.
 	 * @return			True to succeed loading, false to fail.
 	 */
-	// virtual bool SDK_OnLoad(char *error, size_t maxlength, bool late);
+	virtual bool SDK_OnLoad(char *error, size_t maxlength, bool late);
 
 	/**
 	 * @brief This is called right before the extension is unloaded.
@@ -83,7 +85,7 @@ public:
 	 * @brief This is called once all known extensions have been loaded.
 	 * Note: It is is a good idea to add natives here, if any are provided.
 	 */
-	virtual void SDK_OnAllLoaded();
+	// virtual void SDK_OnAllLoaded();
 
 	/**
 	 * @brief Called when the pause state is changed.
